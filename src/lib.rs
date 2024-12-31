@@ -4,7 +4,7 @@ use winit::event_loop::EventLoop;
 use winit::keyboard::{KeyCode, PhysicalKey};
 use winit::window::{Window, WindowBuilder};
 
-struct State<'a> {
+struct Engine<'a> {
     surface: wgpu::Surface<'a>,
     device: wgpu::Device,
     queue: wgpu::Queue,
@@ -17,9 +17,9 @@ struct State<'a> {
     render_pipeline: wgpu::RenderPipeline,
 }
 
-impl<'a> State<'a> {
+impl<'a> Engine<'a> {
     // Creating some of the wgpu types requires async code
-    async fn new(window: &'a Window) -> State<'a> {
+    async fn new(window: &'a Window) -> Engine<'a> {
         let size = window.inner_size();
 
         // The instance is a handle to our GPU
@@ -223,7 +223,7 @@ pub async fn run() -> Result<(), EventLoopError> {
     let event_loop = EventLoop::new().unwrap();
     let window = WindowBuilder::new().build(&event_loop).unwrap();
 
-    let mut state = State::new(&window).await;
+    let mut state = Engine::new(&window).await;
 
     event_loop.run(move |event, control_flow| match event {
         Event::WindowEvent {
